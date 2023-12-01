@@ -3,8 +3,6 @@ const Wallet = require('ethereumjs-wallet');
 
 
 
-GenerateNewWallet();
-
 async function GenerateNewWallet(){
 
     newKey = new PhantasmaTS.PhantasmaKeys.generate()
@@ -17,10 +15,22 @@ async function GenerateNewWallet(){
         },
         "PrivateKey": PhantasmaTS.getPrivateKeyFromWif(newKey.toWIF())
     };
-    console.log(walletData)
-
+    return walletData;
 }
 
 
+async function LoadWallet(privateKey){
+    
+    let walletData = {
+        "WIF": PhantasmaTS.getWifFromPrivateKey(privateKey),
+        "PublicKey": {
+            "Phantasma": PhantasmaTS.getAddressFromWif(PhantasmaTS.getWifFromPrivateKey(privateKey)),
+            "EVM": Wallet.default.fromPrivateKey(Buffer.from(privateKey, 'hex')).getAddressString()
+        },
+        "PrivateKey": privateKey
+    };
+
+    return walletData;
+}
 
 
